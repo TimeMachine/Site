@@ -1,0 +1,21 @@
+<style>
+  body{
+    background: rgba(255,255,255,0.5) url("bg.jpg") fixed;
+	background-repeat:no-repeat;
+    background-color: black;
+	background-position:center;
+	background-size: contain;
+  }
+</style>
+
+<body>
+	<nav>
+		<ul id="bar">
+			<h1><a href="/">Glenus</a></h1>
+			<li><a href="index" class="<%= path === "/" ? "nav_a now" : "" %>">首頁</a></li>
+			<li><a href="table" class="<%= path === "/table" ? "nav_a now" : "" %>">戰力表</a></li>
+			<li><a href="setting" class="<%= path === "/setting" ? "nav_a now" : "" %>">設定</a></li>
+			<li><a href="schedule" class="<%= path === "/schedule" ? "nav_a now" : "" %>">隊伍配置</a></li>
+			<li><a href="calculate" class="<%= path === "/calculate" ? "nav_a now" : "" %>">傷害計算機</a></li>
+		</ul>
+	</nav>

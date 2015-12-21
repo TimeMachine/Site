@@ -1,0 +1,59 @@
+<%- include header.ejs %>
+	<div id="content">
+		<li>戰力分析表</li>
+		<div id="userdata" ></div>
+		<script>
+		  var container = document.getElementById('userdata');
+		  var userdata = new Handsontable(container,
+				{
+				  dataSchema: {_id: null, lineID: null, name: null, power1: null, power1_Special: null, power2: null, power2_Special: null, power3: null, power3_Special: null},
+				  colHeaders: ['遊戲名稱', 'Line暱稱', '1軍戰鬥力', '1軍隊長', '2軍戰鬥力', '2軍隊長' ,'3軍戰鬥力', '3軍隊長'],
+				  columns: [
+					{data: 'name'},
+					{data: 'lineID'},
+					{data: 'power1'},
+					{data: 'power1_Special'},
+					{data: 'power2'},
+					{data: 'power2_Special'},
+					{data: 'power3'},
+					{data: 'power3_Special'}
+				  ],
+				  clickBeginsEditing : true,
+				  startCols: 9,
+				  rowHeaders: true,
+				  minSpareRows: 1,
+				  contextMenu: true,
+				  cells: function (row, col, prop) {
+					if (prop === 'power1'||prop === 'power2'||prop === 'power3') {
+					  this.renderer = powerRenderer;
+					}
+					else if(prop === 'power1_Special'||prop === 'power2_Special'||prop === 'power3_Special'){
+					  this.renderer = specialRenderer;
+					}
+				  },
+				  afterChange: function (change, source) {
+					if (source === 'loadData') {
+					  return;
+					}
+					//insert				
+					if(!this.getSourceDataAtRow(change[0][0])._id)
+					{
+						postData(this.getSourceDataAtRow(change[0][0]));
+					}
+					else if(change[0][1]==='name' &&  change[0][3]=== '') //delete
+					{
+						delData(this.getSourceDataAtRow(change[0][0]));
+					}
+					else  //update
+					{
+						putData(this.getSourceDataAtRow(change[0][0]));
+					}
+				  }
+			});
+		  getData();
+		</script>
+		<h3>◎刪除資料:將名稱填成空白即可刪除一整筆</h3>
+	</div>
+</body>
+
+</html>

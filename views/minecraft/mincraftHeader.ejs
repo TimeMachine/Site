@@ -1,0 +1,18 @@
+<%- include header.ejs %>
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <h1><a href="/">Glenus</a></h1>
+        <div class="slogan">minecraft 1.7.9</div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="current" in the li tag for the selected page - to highlight which page you're on -->
+          <li class="<%= path === "/" ? "current" : "" %>" ><a href="index">首頁</a></li>
+          <li class="<%= path === "/examples" ? "current" : "" %>" ><a href="examples">安裝</a></li>
+          <li class="<%= path === "/page" ? "current" : "" %>" ><a href="page">遊戲歷程</a></li>
+          <li class="<%= path === "/another_page" ? "current" : "" %>" ><a href="another_page">遊戲地圖</a></li>
+        </ul>
+      </div>
+    </div>

@@ -1,0 +1,156 @@
+<%- include header.ejs %>
+	<div id="content">
+		<li>建築物</li>
+		<div id="building"></div>
+		<script>
+		  var containerBuilding = document.getElementById('building');
+		  var building = new Handsontable(containerBuilding,
+				{
+				  dataSchema: {_id: null, name: null, limit: null, rank: null},
+				  colHeaders: ['名稱', '人數上限', '重要性排名'],
+				  columns: [
+					{data: 'name'},
+					{data: 'limit'},
+					{data: 'rank'}
+				  ],
+				  startCols: 4,
+				  colWidths: [120,100,100],
+				  
+				  rowHeaders: true,
+				  minSpareRows: 1,
+				  contextMenu: true,
+				  cells: function (row, col, prop) {
+					this.renderer = buildingRenderer;
+				  },
+				  afterChange: function (change, source) {
+					if (source === 'loadData') {
+					  return;
+					}
+					//insert				
+					if(!this.getSourceDataAtRow(change[0][0])._id)
+					{
+						postBuilding(this.getSourceDataAtRow(change[0][0]));
+					}
+					else if(change[0][1]==='name' &&  change[0][3]=== '') //delete
+					{
+						delBuilding(this.getSourceDataAtRow(change[0][0]));
+					}
+					else  //update
+					{
+						putBuilding(this.getSourceDataAtRow(change[0][0]));
+					}
+				  }
+			});
+				getBuilding();
+		</script>
+		<p><p>
+			<li>特殊隊長 --增加或減少戰力值</li>
+			<li>戰力調整可負值</li>
+		<div id="special"></div>
+		<script>
+		  var containerSpecial = document.getElementById('special');
+		  var special = new Handsontable(containerSpecial,
+				{
+				  dataSchema: {_id: null, name: null, power: null},
+				  colHeaders: ['名稱', '戰力調整'],
+				  columns: [
+					{data: 'name'},
+					{data: 'power'}
+				  ],
+				  startCols: 3,
+				  colWidths: [100,80],
+				  rowHeaders: true,
+				  minSpareRows: 1,
+				  contextMenu: true,
+				  afterChange: function (change, source) {
+					if (source === 'loadData') {
+					  return;
+					}
+					//insert				
+					if(!this.getSourceDataAtRow(change[0][0])._id)
+					{
+						postSpecial(this.getSourceDataAtRow(change[0][0]));
+					}
+					else if(change[0][1]==='name' &&  change[0][3]=== '') //delete
+					{
+						delSpecial(this.getSourceDataAtRow(change[0][0]));
+					}
+					else  //update
+					{
+						putSpecial(this.getSourceDataAtRow(change[0][0]));
+					}
+				  }
+			});
+				getSpecial();
+		</script>
+		<p><p>
+			<li>在這個時段內(24hr)，修改戰力表不會更改戰力配置</li>
+			<li>星期日: 0，星期一: 1，星期二: 2 ...</li>
+		<div id="time"></div>
+		<script>
+		  var containerTime = document.getElementById('time');
+		  var time = new Handsontable(containerTime,
+				{
+				  dataSchema: {_id: null, day: null, after: null, before: null},
+				  colHeaders: ['星期幾', '從幾點', '到幾點'],
+				  columns: [
+					{data: 'day'},
+					{data: 'after'},
+					{data: 'before'}
+				  ],
+				  startCols: 4,
+				  colWidths: [60,80,80],
+				  rowHeaders: true,
+				  minSpareRows: 1,
+				  contextMenu: true,
+				  afterChange: function (change, source) {
+					if (source === 'loadData') {
+					  return;
+					}
+					//insert				
+					if(!this.getSourceDataAtRow(change[0][0])._id)
+					{
+						postTime(this.getSourceDataAtRow(change[0][0]));
+					}
+					else if(change[0][1]==='day' &&  change[0][3]=== '') //delete
+					{
+						delTime(this.getSourceDataAtRow(change[0][0]));
+					}
+					else  //update
+					{
+						putTime(this.getSourceDataAtRow(change[0][0]));
+					}
+				  }
+			});
+				getTime();
+		</script>
+		<p><p>
+		<li>排程演算法微調</li>
+		<div id="schedule"></div>
+		<script>
+		  var containerschedule = document.getElementById('schedule');
+		  var schedule = new Handsontable(containerschedule,
+				{
+				  dataSchema: {_id: null, cycle: null, cycle_len:null,lowerBound:null},
+				  colHeaders: ['排放迴圈排名數', '排放迴圈人數','戰鬥力最低限制'],
+				  columns: [
+					{data: 'cycle'},
+					{data: 'cycle_len'},
+					{data: 'lowerBound'}
+				  ],
+				  startCols: 2,
+				  startRows: 1,
+				  contextMenu: true,
+				  afterChange: function (change, source) {
+					if (source === 'loadData') {
+					  return;
+					}
+					putSchedule(this.getSourceDataAtRow(change[0][0]));
+				  }
+			});
+		  getSchedule();
+		  </script>
+	</div>
+</body>
+
+</html>

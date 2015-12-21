@@ -1,0 +1,123 @@
+<%- include header.ejs %>
+<script>
+var counter1 = 1;var counter2 = 1;var counter3 = 1;var counter4 = 1;var counter5 = 1;var counter6 = 1;var counter7 = 1;var counter8 = 1;
+function textChange(){
+	var damage = document.getElementById("attacker").value;
+	var guard = document.getElementById("defenser").value;
+	var attackUP = 1;
+	var attackDown = 1;
+	var guardUP = 1;
+	var guardDown = 1;
+	var damageUP = 1;
+	var damageDown = 1;
+	var criticalUP = 1.5;
+	var criticalDown = 1;
+	var result = 0;
+	for(i = 1;i <= counter1;i++){
+		attackUP = attackUP * ( 1 + document.getElementById("dynamicInput"+1+"_"+i).value / 100 );
+	}
+	for(i = 1;i <= counter2;i++){
+		attackDown = attackDown * ( 1 - document.getElementById("dynamicInput"+2+"_"+i).value / 100 );
+	}
+	if(attackDown < 0)	attackDown = 0;
+	for(i = 1;i <= counter3;i++){
+		guardUP = guardUP * ( 1 + document.getElementById("dynamicInput"+3+"_"+i).value / 100 );
+	}
+	for(i = 1;i <= counter4;i++){
+		guardDown = guardDown * ( 1 - document.getElementById("dynamicInput"+4+"_"+i).value / 100 );
+	}
+	if(guardDown < 0)	guardDown = 0;
+	for(i = 1;i <= counter5;i++){
+		damageUP = damageUP * ( 1 + document.getElementById("dynamicInput"+5+"_"+i).value / 100 );
+	}
+	for(i = 1;i <= counter6;i++){
+		damageDown = damageDown * ( 1 - document.getElementById("dynamicInput"+6+"_"+i).value / 100 );
+	}
+	if(damageDown < 0)	damageDown = 0;
+	for(i = 1;i <= counter7;i++){
+		criticalUP = criticalUP + document.getElementById("dynamicInput"+7+"_"+i).value / 100 ;
+	}
+	for(i = 1;i <= counter8;i++){
+		criticalDown = criticalDown * ( 1 - document.getElementById("dynamicInput"+8+"_"+i).value / 100 );
+	}
+	if(criticalDown < 0)	criticalDown = 0;
+	result = (damage * attackUP * attackDown - (guard * guardUP * guardDown /3) ) * damageUP * damageDown;
+	if(result < 1)	result = 1;
+	document.getElementById("solution1").innerHTML = Math.round(result);
+	document.getElementById("solution2").innerHTML = Math.round(result*criticalUP*criticalDown);
+	document.getElementById("solution3").innerHTML = Math.round(result*1.5);
+	document.getElementById("solution4").innerHTML = Math.round(result*criticalUP*criticalDown*1.5);
+}
+function addInput(divName,counter){
+	var newdiv = document.createElement('div');
+	newdiv.innerHTML = "<li>" + counter + "&nbsp;&nbsp;&nbsp;" +" <input type='text' id='"+divName+"_"+ counter+"' value = '0' size='5'>" + "&nbsp;%</li>";
+	document.getElementById(divName).appendChild(newdiv);
+	document.getElementById(divName+"_"+counter).addEventListener("change",textChange);
+}
+</script>
+	<div id="content">
+		<ly>基礎能力</ly>
+		<li>己方攻擊力:&nbsp;&nbsp;&nbsp;&nbsp;<input id="attacker" type="text" value = "0" size="5">&nbsp;</li>
+		<li>敵方防禦力:&nbsp;&nbsp;&nbsp;&nbsp;<input id="defenser" type="text" value = "0" size="5">&nbsp;</li>
+		<ly>己方攻擊力增加</ly>
+			<div id="dynamicInput1">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput1_1" type="text" value = "0" size="5">&nbsp;%</li>
+			</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput1',++counter1);">
+		<br><br><ly>己方攻擊力減少</ly>
+			<div id="dynamicInput2">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput2_1" type="text" value = "0" size="5">&nbsp;%</li>
+			</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput2',++counter2);">
+		<br><br><ly>敵方防禦力增加</ly>
+			<div id="dynamicInput3">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput3_1" type="text" value = "0" size="5">&nbsp;%</li>
+			</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput3',++counter3);">
+		<br><br><ly>敵方防禦力減少</ly>
+			<div id="dynamicInput4">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput4_1" type="text" value = "0" size="5">&nbsp;%</li>
+			</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput4',++counter4);">
+		<br><br><ly>己方造成的傷害增加</ly>
+			<div id="dynamicInput5">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput5_1" type="text" value = "0" size="5">&nbsp;%</li>
+		</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput5',++counter5);">
+		<br><br><ly>敵方受到的傷害降低</ly>
+			<div id="dynamicInput6">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput6_1" type="text" value = "0" size="5">&nbsp;%</li>
+		</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput6',++counter6);">
+		<br><br><ly>爆擊傷害增加</ly>
+			<div id="dynamicInput7">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput7_1" type="text" value = "0" size="5">&nbsp;%</li>
+		</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput7',++counter7);">
+		<br><br><ly>爆擊傷害降低</ly>
+			<div id="dynamicInput8">
+				 <li>1&nbsp;&nbsp;&nbsp;&nbsp;<input id="dynamicInput8_1" type="text" value = "0" size="5">&nbsp;%</li>
+		</div>
+			<input type="button" value="新增" onClick="addInput('dynamicInput8',++counter8);">
+		<br><br><ly>結果</ly>
+		<div id="solution">
+			<li>對敵方造成的傷害&nbsp;:&nbsp;&nbsp;&nbsp;<label id="solution1"></label></li>
+			<li>爆擊&nbsp;:&nbsp;&nbsp;&nbsp;<label id="solution2"></label></li>
+			<li>屬性相剋，無爆擊&nbsp;:&nbsp;&nbsp;&nbsp;<label id="solution3"></label></li>
+			<li>屬性相剋，有爆擊&nbsp;:&nbsp;&nbsp;&nbsp;<label id="solution4"></label></li>
+		</div>
+		<script>
+			document.getElementById("attacker").addEventListener("change",textChange);
+			document.getElementById("defenser").addEventListener("change",textChange);
+			document.getElementById("dynamicInput1_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput2_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput3_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput4_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput5_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput6_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput7_1").addEventListener("change",textChange);
+			document.getElementById("dynamicInput8_1").addEventListener("change",textChange);
+		</script>
+	</div>
+</body>
+</html>

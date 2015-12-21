@@ -1,0 +1,577 @@
+<html>
+<head>
+  <title>Glenus: <%= title %></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="dist/handsontable.full.js"></script>
+  <link rel="stylesheet" media="screen" href="dist/handsontable.full.css">
+  <style type="text/css">
+	#deploy col.rowHeader {
+		width: 90px;
+	}
+	#userdata td{
+		text-align: right;
+	}
+	#building td{
+		text-align: right;
+	}
+	#special td{
+		text-align: right;
+	}
+	#schedule td{
+		text-align: right;
+	}
+	#time td{
+		text-align: right;
+	}
+	#deploy td{
+		text-align: right;
+	}
+  </style>
+</head>
+
+<script language="JavaScript">
+<!--
+
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
+function detectmob() {
+if(window.innerWidth <= 800 && window.innerHeight <= 600) {
+     return true;
+   } else {
+     return false;
+   }
+}
+
+function getData() {
+	  $.getJSON('api/data/', function( data ) {
+		  userdata.loadData(data);
+	  });
+}
+
+function postData(data) {
+	$.ajax({
+	  url: 'api/data/',
+	  data: {name: data.name,power1: data.power1,power1_Special: data.power1_Special,power2: data.power2,power2_Special: data.power2_Special,power3: data.power3,power3_Special: data.power3_Special},
+	  type:"POST",
+	  dataType:'json',
+	  success: function(msg){
+                    getData();
+					getDeploy();
+                }
+	});
+}
+
+function putData(data) {
+	$.ajax({
+	  url: 'api/data/',
+	  data: {_id: data._id,name: data.name,power1: data.power1,power1_Special: data.power1_Special,power2: data.power2,power2_Special: data.power2_Special,power3: data.power3,power3_Special: data.power3_Special},
+	  type:"PUT",
+	  dataType:'json',
+	  success: function(msg){
+                    getData();
+					getDeploy();
+                }
+	});
+}
+
+function delData(data) {
+	$.ajax({
+	  url: 'api/data/',
+	  data: {_id: data._id},
+	  type:"DELETE",
+	  dataType:'json',
+	  success: function(msg){
+                    getData();
+					getDeploy();
+                }
+	});
+}
+//-------------------------------Renderer------------------------------------------
+var powerRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+  td.style.color = 'black';
+  Handsontable.renderers.TextRenderer.apply(this, arguments);
+  if(value >= 6000)
+	td.style.backgroundColor = "#FF7F50";
+  else if(value >= 5000)
+	td.style.backgroundColor = 'yellow';
+
+};
+
+var specialRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+  Handsontable.renderers.TextRenderer.apply(this, arguments);
+  if(value === 'Y' || value === 1|| value === '1')
+	td.style.color = 'red';
+};
+var cycle_n = 0;
+var buildingRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+  Handsontable.renderers.TextRenderer.apply(this, arguments);
+  if(row < cycle_n)
+	td.style.backgroundColor = "#C1FFC1";
+};
+//-------------------------------building------------------------------------------
+function getBuilding() {
+	  $.getJSON('api/building/', function( data ) {
+		  building.loadData(data);
+	  });
+}
+
+function postBuilding(data) {
+	$.ajax({
+	  url: 'api/building/',
+	  data: {name: data.name,limit: data.limit,rank: data.rank},
+	  type:"POST",
+	  dataType:'json',
+	  success: function(msg){
+                    getBuilding();
+					getDeploy();
+                }
+	});
+}
+
+function putBuilding(data) {
+	$.ajax({
+	  url: 'api/building/',
+	  data: {_id: data._id,name: data.name,limit: data.limit,rank: data.rank},
+	  type:"PUT",
+	  dataType:'json',
+	  success: function(msg){
+                    getBuilding();
+					getDeploy();
+                }
+	});
+}
+
+function delBuilding(data) {
+	$.ajax({
+	  url: 'api/building/',
+	  data: {_id: data._id},
+	  type:"DELETE",
+	  dataType:'json',
+	  success: function(msg){
+                    getBuilding();
+					getDeploy();
+                }
+	});
+}
+	
+//-------------------------------deploy------------------------------------------
+function getDeploy() {
+	  $.getJSON('api/deploy/', function( data ) {
+		  var containerdeploy = document.getElementById('deploy');
+		  while (containerdeploy.firstChild) {
+			containerdeploy.removeChild(containerdeploy.firstChild);
+		}
+		  for(var i=0 ; i<data.length ;i++)
+		  {
+			var div_t = document.createElement("div");
+			div_t.classname = 'deploy'+i;
+			var array = $.map(data[i].people, function(value, index) {
+			return [value];
+			});
+			var deploy = new Handsontable(div_t,
+			  {
+				colHeaders: Array.apply(null, Array(15)).map(function (_, i) {return i+1;}),
+				rowHeaders: ['名稱', '戰鬥力', '幾軍','特殊隊長'],
+				startCols: 15,
+				startRows: 4,
+				cells: function(r,c, prop) {
+				var cellProperties = {};
+				cellProperties.readOnly = true;
+				this.renderer = powerRenderer;
+				return cellProperties;
+				}
+			  });
+			var li_t = document.createElement("li");
+			var li_v = document.createTextNode(data[i].name);
+			li_t.appendChild(li_v);
+			containerdeploy.appendChild(li_t);
+			containerdeploy.appendChild(div_t);
+			deploy.loadData(array);
+		  }
+
+	  });
+}
+//-------------------------------schedule------------------------------------------
+function getSchedule() {
+	  $.getJSON('api/schedule/', function( data ) {
+		  schedule.loadData(data);
+		  cycle_n = data[0].cycle;
+		  building.render();
+	  });
+}
+
+function putSchedule(data) {
+	$.ajax({
+	  url: 'api/schedule/',
+	  data: {_id: data._id,cycle: data.cycle,cycle_len: data.cycle_len,lowerBound: data.lowerBound},
+	  type:"PUT",
+	  dataType:'json',
+	  success: function(msg){
+                    getSchedule();
+					getDeploy();
+                }
+	});
+}
+//-------------------------------special------------------------------------------
+function getSpecial() {
+	  $.getJSON('api/special/', function( data ) {
+		  special.loadData(data);
+	  });
+}
+
+function postSpecial(data) {
+	$.ajax({
+	  url: 'api/special/',
+	  data: {name: data.name,power: data.power},
+	  type:"POST",
+	  dataType:'json',
+	  success: function(msg){
+                    getSpecial();
+					getDeploy();
+                }
+	});
+}
+
+function putSpecial(data) {
+	$.ajax({
+	  url: 'api/special/',
+	  data: {_id: data._id,name: data.name,power: data.power},
+	  type:"PUT",
+	  dataType:'json',
+	  success: function(msg){
+                    getSpecial();
+					getDeploy();
+                }
+	});
+}
+
+function delSpecial(data) {
+	$.ajax({
+	  url: 'api/special/',
+	  data: {_id: data._id},
+	  type:"DELETE",
+	  dataType:'json',
+	  success: function(msg){
+                    getSpecial();
+					getDeploy();
+                }
+	});
+}
+//-------------------------------time------------------------------------------
+function getTime() {
+	  $.getJSON('api/time/', function( data ) {
+		  time.loadData(data);
+	  });
+}
+
+function postTime(data) {
+	$.ajax({
+	  url: 'api/time/',
+	  data: {day: data.day,after: data.after,before: data.before},
+	  type:"POST",
+	  dataType:'json',
+	  success: function(msg){
+                    getTime();
+                }
+	});
+}
+
+function putTime(data) {
+	$.ajax({
+	  url: 'api/time/',
+	  data: {_id: data._id,day: data.day,after: data.after,before: data.before},
+	  type:"PUT",
+	  dataType:'json',
+	  success: function(msg){
+                    getTime();
+                }
+	});
+}
+
+function delTime(data) {
+	$.ajax({
+	  url: 'api/time/',
+	  data: {_id: data._id},
+	  type:"DELETE",
+	  dataType:'json',
+	  success: function(msg){
+                    getTime();
+                }
+	});
+}
+//-->
+</script>
+
+<body>
+	<h3>-----------茶會----------------------------------</h3>
+	<!--
+	<div id="input">
+		<form name="input_form">
+		  <a>名稱  </a><input name="name" type="text" value=""><p>
+		  <a>1軍戰鬥力  </a><input name="power1" type="text" value="" /><p>
+		  <a>1軍隊長是否崇音/友美/水之式/爐心  </a><input name="power1_Special" type="text" value="" /><p>
+		  <a>2軍戰鬥力  </a><input name="power2" type="text" value="" /><p>
+		  <a>2軍隊長是否崇音/友美/水之式/爐心  </a><input name="power2_Special" type="text" value="" /><p>
+		  <a>3軍戰鬥力  </a><input name="power3" type="text" value="" /><p>
+		  <a>3軍隊長是否崇音/友美/水之式/爐心  </a><input name="power3_Special" type="text" value="" /><p>
+		  <input type="button" onclick="
+		  window.location.href='api/data/'+document.input_form.name.value;
+		  " value="提交"/>
+		</form>
+	</div>
+	<script>
+	if(!isMobile.any())
+	{
+		console.log('enter');
+		x=document.getElementById('input');
+		x.parentNode.removeChild(x);
+	}	
+	</script>
+	-->
+	<li>戰力分析表(可修改)</li>
+	<div id="userdata"></div>
+	<script>
+	  var container = document.getElementById('userdata');
+	  var userdata = new Handsontable(container,
+			{
+			  dataSchema: {_id: null, name: null, power1: null, power1_Special: null, power2: null, power2_Special: null, power3: null, power3_Special: null},
+			  colHeaders: ['名稱', '1軍戰鬥力', '1軍特殊隊長', '2軍戰鬥力', '2軍特殊隊長' ,'3軍戰鬥力', '3軍特殊隊長'],
+			  columns: [
+				{data: 'name'},
+				{data: 'power1'},
+				{data: 'power1_Special'},
+				{data: 'power2'},
+				{data: 'power2_Special'},
+				{data: 'power3'},
+				{data: 'power3_Special'},
+			  ],
+			  clickBeginsEditing : true,
+			  startCols: 8,
+			  rowHeaders: true,
+			  minSpareRows: 1,
+			  contextMenu: true,
+			  cells: function (row, col, prop) {
+				if (prop === 'power1'||prop === 'power2'||prop === 'power3') {
+				  this.renderer = powerRenderer;
+				}
+				else if(prop === 'power1_Special'||prop === 'power2_Special'||prop === 'power3_Special'){
+				  this.renderer = specialRenderer;
+				}
+			  },
+			  afterChange: function (change, source) {
+				if (source === 'loadData') {
+				  return;
+				}
+				//insert				
+				if(!this.getSourceDataAtRow(change[0][0])._id)
+				{
+					postData(this.getSourceDataAtRow(change[0][0]));
+				}
+				else if(change[0][1]==='name' &&  change[0][3]=== '') //delete
+				{
+					delData(this.getSourceDataAtRow(change[0][0]));
+				}
+				else  //update
+				{
+					putData(this.getSourceDataAtRow(change[0][0]));
+				}
+			  }
+		});
+	  getData();
+	</script>
+	<h5>◎刪除資料:將名稱填成空白即可刪除一整筆</h5>
+	<p><p>
+	<li>建築物(可修改)</li>
+	<div id="building"></div>
+	<script>
+	  var containerBuilding = document.getElementById('building');
+	  var building = new Handsontable(containerBuilding,
+			{
+			  dataSchema: {_id: null, name: null, limit: null, rank: null},
+			  colHeaders: ['名稱', '人數上限', '重要性排名'],
+			  columns: [
+				{data: 'name'},
+				{data: 'limit'},
+				{data: 'rank'}
+			  ],
+			  startCols: 4,
+			  colWidths: [65,100,100],
+			  rowHeaders: true,
+			  minSpareRows: 1,
+			  contextMenu: true,
+			  cells: function (row, col, prop) {
+				this.renderer = buildingRenderer;
+			  },
+			  afterChange: function (change, source) {
+				if (source === 'loadData') {
+				  return;
+				}
+				//insert				
+				if(!this.getSourceDataAtRow(change[0][0])._id)
+				{
+					postBuilding(this.getSourceDataAtRow(change[0][0]));
+				}
+				else if(change[0][1]==='name' &&  change[0][3]=== '') //delete
+				{
+					delBuilding(this.getSourceDataAtRow(change[0][0]));
+				}
+				else  //update
+				{
+					putBuilding(this.getSourceDataAtRow(change[0][0]));
+				}
+			  }
+		});
+			getBuilding();
+	</script>
+	<p><p>
+		<li>特殊隊長(可修改)</li>
+		<li>戰力調整可負值</li>
+	<div id="special"></div>
+	<script>
+	  var containerSpecial = document.getElementById('special');
+	  var special = new Handsontable(containerSpecial,
+			{
+			  dataSchema: {_id: null, name: null, power: null},
+			  colHeaders: ['名稱', '戰力調整'],
+			  columns: [
+				{data: 'name'},
+				{data: 'power'}
+			  ],
+			  startCols: 3,
+			  colWidths: [100,80],
+			  rowHeaders: true,
+			  minSpareRows: 1,
+			  contextMenu: true,
+			  afterChange: function (change, source) {
+				if (source === 'loadData') {
+				  return;
+				}
+				//insert				
+				if(!this.getSourceDataAtRow(change[0][0])._id)
+				{
+					postSpecial(this.getSourceDataAtRow(change[0][0]));
+				}
+				else if(change[0][1]==='name' &&  change[0][3]=== '') //delete
+				{
+					delSpecial(this.getSourceDataAtRow(change[0][0]));
+				}
+				else  //update
+				{
+					putSpecial(this.getSourceDataAtRow(change[0][0]));
+				}
+			  }
+		});
+			getSpecial();
+	</script>
+	<p><p>
+		<li>在這個時段內(24hr)，修改戰力表不會更改戰力配置(可修改)</li>
+		<li>星期日: 0，星期一: 1，星期二: 2 ...</li>
+	<div id="time"></div>
+	<script>
+	  var containerTime = document.getElementById('time');
+	  var time = new Handsontable(containerTime,
+			{
+			  dataSchema: {_id: null, day: null, after: null, before: null},
+			  colHeaders: ['星期幾', '從幾點', '到幾點'],
+			  columns: [
+				{data: 'day'},
+				{data: 'after'},
+				{data: 'before'}
+			  ],
+			  startCols: 4,
+			  colWidths: [60,80,80],
+			  rowHeaders: true,
+			  minSpareRows: 1,
+			  contextMenu: true,
+			  afterChange: function (change, source) {
+				if (source === 'loadData') {
+				  return;
+				}
+				//insert				
+				if(!this.getSourceDataAtRow(change[0][0])._id)
+				{
+					postTime(this.getSourceDataAtRow(change[0][0]));
+				}
+				else if(change[0][1]==='day' &&  change[0][3]=== '') //delete
+				{
+					delTime(this.getSourceDataAtRow(change[0][0]));
+				}
+				else  //update
+				{
+					putTime(this.getSourceDataAtRow(change[0][0]));
+				}
+			  }
+		});
+			getTime();
+	</script>
+	<p><p>
+	<li>排程演算法微調(可修改)</li>
+	<div id="schedule"></div>
+	<script>
+	  var containerschedule = document.getElementById('schedule');
+	  var schedule = new Handsontable(containerschedule,
+			{
+			  dataSchema: {_id: null, cycle: null, cycle_len:null,lowerBound:null},
+			  colHeaders: ['排放迴圈排名數', '排放迴圈人數','戰鬥力最低限制'],
+			  columns: [
+				{data: 'cycle'},
+				{data: 'cycle_len'},
+				{data: 'lowerBound'}
+			  ],
+			  startCols: 2,
+			  startRows: 1,
+			  contextMenu: true,
+			  afterChange: function (change, source) {
+				if (source === 'loadData') {
+				  return;
+				}
+				putSchedule(this.getSourceDataAtRow(change[0][0]));
+			  }
+		});
+	  getSchedule();
+	  </script>
+	<p><p>
+	<h3>--------------隊伍配置-------------------------------</h3>
+	<div id="deploy" style="float:none;"></div>
+	<script>
+		getDeploy();
+	</script>
+	<!--
+	<form name="input_form">
+	  <a>名稱  </a><input name="name" type="text" value=""><p>
+	  <a>1軍戰鬥力  </a><input name="power1" type="text" value="" /><p>
+	  <a>1軍隊長是否崇音/友美/水之式/爐心  </a><input name="power1_Special" type="text" value="" /><p>
+	  <a>2軍戰鬥力  </a><input name="power2" type="text" value="" /><p>
+	  <a>2軍隊長是否崇音/友美/水之式/爐心  </a><input name="power2_Special" type="text" value="" /><p>
+	  <a>3軍戰鬥力  </a><input name="power3" type="text" value="" /><p>
+	  <a>3軍隊長是否崇音/友美/水之式/爐心  </a><input name="power3_Special" type="text" value="" /><p>
+	  <input type="button" onclick="
+	  window.location.href='api/data/'+document.input_form.name.value;
+	  " value="提交"/>
+	</form>			
+	-->
+</body>
+
+</html>

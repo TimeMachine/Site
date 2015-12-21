@@ -1,0 +1,42 @@
+<%- include header.ejs %>
+<script>
+function logout(){
+	clearCookie();
+}
+
+</script>
+	<div id="content">
+		<h3>您好!</h3>
+		<h3>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="登出" onClick="logout();">&nbsp;&nbsp;</h3>
+		<div onload="sampleApp1()">
+        
+        <p>
+            <button id="btnChange" class="active">Change Model</button>
+        </p>
+        
+        <div>
+            <canvas id="glcanvas" width="680" height="940">
+            </canvas>
+        </div>
+
+        <!-- Live2D Library -->
+        <script src="../live2d/lib/live2d.min.js"></script>
+        
+        <!-- Live2D Framework -->
+        <script src="../live2d/framework/Live2DFramework.js"></script>
+        
+        <!-- User's Script -->
+        <script src="../live2d/src/utils/MatrixStack.js"></script>
+        <script src="../live2d/src/utils/ModelSettingJson.js"></script>
+        <script src="../live2d/src/PlatformManager.js"></script>
+        <script src="../live2d/src/LAppDefine.js"></script>
+        <script src="../live2d/src/LAppModel.js"></script>
+        <script src="../live2d/src/LAppLive2DManager.js"></script>
+        <script src="../live2d/src/SampleApp1.js"></script>
+
+		</div>
+		<script>sampleApp1()</script>
+	</div>
+</body>
+
+</html>

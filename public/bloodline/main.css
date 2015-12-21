@@ -1,0 +1,115 @@
+#deploy col.rowHeader {
+	width: 90px;
+}
+#userdata td{
+	text-align: right;
+}
+#building td{
+	text-align: right;
+}
+#special td{
+	text-align: right;
+}
+#schedule td{
+	text-align: right;
+}
+#time td{
+	text-align: right;
+}
+#deploy td{
+	text-align: right;
+}
+#content{
+	margin-left:10%; 
+	margin-right:10%; 
+	margin-top:5%; 
+	margin-bottom:5%; 
+}
+
+body{
+	padding: 0;
+	margin: 0;
+}
+
+h3{
+	text-align: center;
+	color: gold;
+}
+
+li{
+	color: #F0FFF0;
+	font-family: "SHADOW", "微軟正黑體";
+	text-decoration: none;
+	font-size: 1.3em;
+	padding-top: 12px;
+	padding-bottom: 12px;
+}
+
+ly{
+	color: gold;
+	font-family: "SHADOW", "微軟正黑體";
+	text-decoration: none;
+	font-size: 1.3em;
+	padding-top: 12px;
+	padding-bottom: 12px;
+}
+
+nav {
+	width: 100%;
+	background: black;
+	color: white;
+	margin: 0;
+}
+
+nav ul{
+	width: 60%;
+	margin: 0 auto;
+}
+
+nav ul li{
+	text-align: center;
+	list-style-type: none;
+	display: inline-block;
+	padding-left: 20px;
+	padding-right: 20px;
+	height: 35px;
+	padding-top: 12px;	
+	font-size: 1.15em;
+
+	transition: color 0.5s;
+}
+
+nav ul h1{
+	list-style-type: none;
+
+	padding-left: 20px;
+	padding-right: 20px;
+	height: 35px;
+	padding-top: 12px;	
+
+	transition: color 0.5s;
+}
+
+a {
+	color: gold;
+	text-decoration: none;
+}
+
+a:hover {
+	color: red;
+}
+
+nav ul li a{
+	color: white;
+	font-family: "SHADOW", "微軟正黑體";
+	text-decoration: none;
+}
+
+nav ul li a:hover{
+	color: red;
+}
+
+nav ul li a.now{
+	color: gold;
+}
+
