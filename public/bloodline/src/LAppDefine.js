@@ -34,6 +34,7 @@ var LAppDefine = {
     MODEL_HARU_A : "/live2d/sample/SampleApp1/assets/live2d/haru/haru_01.model.json",
     MODEL_HARU_B : "/live2d/sample/SampleApp1/assets/live2d/haru/haru_02.model.json",
     MODEL_SHIZUKU : "/live2d/sample/SampleApp1/assets/live2d/shizuku/shizuku.model.json",
+	MODEL_MIKU : "/live2d/sample/SampleApp1/assets/live2d/miku/miku.model.json",
     MODEL_WANKO : "/live2d/sample/SampleApp1/assets/live2d/wanko/wanko.model.json",
     
     // 外部定義ファイル(json)と合わせる

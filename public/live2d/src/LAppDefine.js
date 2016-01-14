@@ -34,8 +34,12 @@ var LAppDefine = {
     MODEL_HARU_A : "assets/live2d/haru/haru_01.model.json",
     MODEL_HARU_B : "assets/live2d/haru/haru_02.model.json",
     MODEL_SHIZUKU : "assets/live2d/shizuku/shizuku.model.json",
+	MODEL_MIKU : "assets/live2d/miku/miku.model.json",
     MODEL_WANKO : "assets/live2d/wanko/wanko.model.json",
-    
+	MODEL_Epsilon : "assets/live2d/Epsilon/Epsilon.model.json",
+    MODEL_Hibiki : "assets/live2d/hibiki/runtime/hibiki.model.json",
+	MODEL_Aoba : "assets/live2d/aoba/aoba.model.json",
+	
     // 外部定義ファイル(json)と合わせる
     MOTION_GROUP_IDLE : "idle", // アイドリング
     MOTION_GROUP_TAP_BODY : "tap_body", // 体をタップしたとき

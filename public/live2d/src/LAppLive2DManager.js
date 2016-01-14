@@ -33,7 +33,7 @@ LAppLive2DManager.prototype.changeModel = function(gl)
     {
         // モデル切り替えボタンが押された時、モデルを再読み込みする
         this.reloadFlg = false;
-        var no = parseInt(this.count % 4);
+        var no = parseInt(this.count % 6);
 
         var thisRef = this;
         switch (no)
@@ -52,9 +52,19 @@ LAppLive2DManager.prototype.changeModel = function(gl)
             case 2: // わんこ
                 this.releaseModel(0, gl);
                 this.createModel();
-                this.models[0].load(gl, LAppDefine.MODEL_WANKO);            
+                this.models[0].load(gl, LAppDefine.MODEL_MIKU);            
                 break;
-            case 3: // 複数モデル
+			case 3: 
+                this.releaseModel(0, gl);
+                this.createModel();
+                this.models[0].load(gl, LAppDefine.MODEL_Epsilon);            
+                break;
+			case 4: 
+                this.releaseModel(0, gl);
+                this.createModel();
+                this.models[0].load(gl, LAppDefine.MODEL_Hibiki);            
+                break;
+            case 5: // 複数モデル
                 this.releaseModel(0, gl);
                 
                 // 一体目のモデル

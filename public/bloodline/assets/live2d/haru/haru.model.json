@@ -1,12 +1,12 @@
 {
 	"type":"Live2D Model Setting",
 	"name":"haru",
-	"model":"haru_01.moc",
+	"model":"haru_02.moc",
 	"textures":
 	[
-		"haru_01.1024/texture_00.png",
-		"haru_01.1024/texture_01.png",
-		"haru_01.1024/texture_02.png"
+		"haru_02.1024/texture_00.png",
+		"haru_02.1024/texture_01.png",
+		"haru_02.1024/texture_02.png"
 	],
 	"physics":"haru.physics.json",
 	"pose":"haru.pose.json",
@@ -25,7 +25,7 @@
 	{
 		"center_x":0,
 		"y":1.2,
-		"width":2.9
+		"width":2
 	},
 	"hit_areas":
 	[
