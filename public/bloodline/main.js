@@ -31,6 +31,13 @@ if(window.innerWidth <= 800 && window.innerHeight <= 600) {
 function getData() {
 	  $.getJSON('api/data/', function( data ) {
 		  userdata.loadData(data);
+		  var people = userdata.getDataAtProp('power1');
+		  people.push.apply(people,userdata.getDataAtProp('power2'));
+		  people.push.apply(people,userdata.getDataAtProp('power3'));
+		  people = people.filter(function(n){ return n != undefined && n != ""}); 
+		  people.sort(function(a, b){return b-a});
+		  userdata.people = people;	
+		  userdata.render();
 	  });
 }
 
@@ -71,15 +78,19 @@ function delData(data) {
 }
 //-------------------------------Renderer------------------------------------------
 var powerRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-  td.style.color = 'black';
-  Handsontable.renderers.TextRenderer.apply(this, arguments);
-  if(value >= 10000)
-	td.style.backgroundColor = "#B299E5";
-  else if(value >= 8500)
-	td.style.backgroundColor = "#FF7F50";
-  else if(value >= 7500)
-	td.style.backgroundColor = 'yellow';
-
+  if(instance.people){
+	  var ratio = instance.people.indexOf(value) / instance.people.length;
+	  td.style.color = 'black';
+	  Handsontable.renderers.TextRenderer.apply(this, arguments);
+	  if(ratio < 0)
+		  return;
+	  if(ratio <= 0.1)
+		td.style.backgroundColor = "#B299E5";
+	  else if(ratio <= 0.4)
+		td.style.backgroundColor = "#FF7F50";
+	  else if(ratio <= 0.7)
+		td.style.backgroundColor = 'yellow';
+  }
 };
 
 var specialRenderer = function(instance, td, row, col, prop, value, cellProperties) {

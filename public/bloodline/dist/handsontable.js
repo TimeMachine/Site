@@ -4834,6 +4834,7 @@ Handsontable.Core = function Core(rootElement, userSettings) {
     }
   };
   this.loadData = function(data) {
+	  console.log(data.people);
     if (typeof data === 'object' && data !== null) {
       if (!(data.push && data.splice)) {
         data = [data];
